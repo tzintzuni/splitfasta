@@ -6,10 +6,10 @@ Splits a multi-sequence FASTA file into chunks. You can specify the number of ch
 **Usage:**
 
 ```
-python3 split_fasta.py --chunks N <FASTA>
-python3 split_fasta.py --sequences N <FASTA>
+python3 split_fasta.py --chunks N [--prefix /output/path] <FASTA>
+python3 split_fasta.py --sequences N [--prefix /output/path] <FASTA>
 ```
 
-Output is in the same location as the input <FASTA> file with .partN appended to the filenames
+Output is in the same location as the input <FASTA> file unless specified with [--prefix|-p] option. Output files will retain the same original filename with a suffix of `.partN` appended to the filenames where `N` is the non-padded serial chunk number.
 
-Concatenating the '.part' files in order will reconstruct the original file.
+Concatenating the '.part' files in order of `N` will reconstruct the original file.
