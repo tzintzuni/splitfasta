@@ -60,21 +60,33 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--chunks', '-c', type=int, default=None)
     group.add_argument('--sequences', '-s', type=int, default=None)
+    parser.add_argument('--prefix', '-p', type=str, default=None)
     parser.add_argument('fasta')
     args = parser.parse_args()
 
     index = index_sequences(args.fasta)
+    fileparts = args.fasta.rsplit('/', 1)
+    if len(fileparts) > 1:
+        (path, fasta) = fileparts
+    else:
+        fasta = fileparts[0]
+        path = './'
+
+    if args.prefix is not None:
+        outfile = '{}/{}'.format(args.prefix, fasta)
+    else:
+        outfile = '{}/{}'.format(path, fasta)
 
     if isset(args.chunks):
         part = 0
         for (offset, length) in iter_n_chunks(index, args.chunks):
             part += 1
-            chunkfile = '{}.part{}'.format(args.fasta, part)
+            chunkfile = '{}.part{}'.format(outfile, part)
             write_chunk(args.fasta, offset, length, chunkfile)
 
     if isset(args.sequences):
         part = 0
         for (offset, length) in iter_size_chunks(index, args.sequences):
             part += 1
-            chunkfile = '{}.part{}'.format(args.fasta, part)
+            chunkfile = '{}.part{}'.format(outfile, part)
             write_chunk(args.fasta, offset, length, chunkfile)
